@@ -8,7 +8,8 @@
 	"main": "com.viktorodman.scrcpy.sdPlugin/bin/plugin.js",
 	"scripts": {
 		"build": "rollup -c",
-		"watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.viktorodman.scrcpy\""
+		"watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.viktorodman.scrcpy\"",
+		"pack": "npm run build && streamdeck pack com.viktorodman.scrcpy.sdPlugin --force"
 	},
 	"dependencies": {
 		"@elgato/streamdeck": "^2.0.0"
