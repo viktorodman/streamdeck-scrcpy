@@ -1,4 +1,5 @@
 node_modules/
 com.viktorodman.scrcpy.sdPlugin/bin/
+com.viktorodman.scrcpy.sdPlugin/logs/
 *.streamDeckPlugin
 .DS_Store
