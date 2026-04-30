@@ -1,5 +1,6 @@
-import {
+import streamDeck, {
 	action,
+	type DidReceiveSettingsEvent,
 	type KeyAction,
 	type KeyDownEvent,
 	SingletonAction,
@@ -24,28 +25,26 @@ export class MirrorDevice extends SingletonAction<MirrorSettings> {
 	private readonly pollers = new Map<string, NodeJS.Timeout>();
 
 	override async onWillAppear(ev: WillAppearEvent<MirrorSettings>): Promise<void> {
+		streamDeck.logger.info(`willAppear id=${ev.action.id} settings=${JSON.stringify(ev.payload.settings)}`);
 		if (!ev.action.isKey()) return;
-		const serial = ev.payload.settings?.deviceSerial;
-		if (!serial) return;
-
-		const keyAction = ev.action;
-		await this.refreshState(keyAction, serial);
-
-		const timer = setInterval(() => {
-			void this.refreshState(keyAction, serial);
-		}, POLL_INTERVAL_MS);
-		this.pollers.set(ev.action.id, timer);
+		this.restartPolling(ev.action, ev.payload.settings?.deviceSerial);
 	}
 
 	override onWillDisappear(ev: WillDisappearEvent<MirrorSettings>): void {
-		const timer = this.pollers.get(ev.action.id);
-		if (timer) clearInterval(timer);
-		this.pollers.delete(ev.action.id);
+		this.stopPolling(ev.action.id);
+	}
+
+	override async onDidReceiveSettings(ev: DidReceiveSettingsEvent<MirrorSettings>): Promise<void> {
+		streamDeck.logger.info(`didReceiveSettings id=${ev.action.id} settings=${JSON.stringify(ev.payload.settings)}`);
+		if (!ev.action.isKey()) return;
+		this.restartPolling(ev.action, ev.payload.settings?.deviceSerial);
 	}
 
 	override async onKeyDown(ev: KeyDownEvent<MirrorSettings>): Promise<void> {
+		streamDeck.logger.info(`keyDown id=${ev.action.id} settings=${JSON.stringify(ev.payload.settings)}`);
 		const serial = ev.payload.settings?.deviceSerial;
 		if (!serial) {
+			streamDeck.logger.warn("keyDown: no serial configured");
 			await ev.action.showAlert();
 			return;
 		}
@@ -58,6 +57,21 @@ export class MirrorDevice extends SingletonAction<MirrorSettings> {
 		}
 
 		setTimeout(() => void this.refreshState(ev.action, serial), 500);
+	}
+
+	private restartPolling(action: KeyAction<MirrorSettings>, serial: string | undefined): void {
+		this.stopPolling(action.id);
+		if (!serial) return;
+
+		void this.refreshState(action, serial);
+		const timer = setInterval(() => void this.refreshState(action, serial), POLL_INTERVAL_MS);
+		this.pollers.set(action.id, timer);
+	}
+
+	private stopPolling(actionId: string): void {
+		const timer = this.pollers.get(actionId);
+		if (timer) clearInterval(timer);
+		this.pollers.delete(actionId);
 	}
 
 	private async refreshState(action: KeyAction<MirrorSettings>, serial: string): Promise<void> {
