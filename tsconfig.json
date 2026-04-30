@@ -1,0 +1,13 @@
+{
+	"extends": "@tsconfig/node20/tsconfig.json",
+	"compilerOptions": {
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"target": "ES2022",
+		"experimentalDecorators": false,
+		"useDefineForClassFields": true,
+		"outDir": "./com.viktorodman.scrcpy.sdPlugin/bin",
+		"rootDir": "src"
+	},
+	"include": ["src/**/*.ts"]
+}

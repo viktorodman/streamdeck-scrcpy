@@ -1,0 +1,45 @@
+{
+	"Name": "Stream Deck Scrcpy",
+	"Author": "Viktor Ödman",
+	"Description": "Mirror Android devices via scrcpy with state-aware buttons",
+	"Version": "0.1.0.0",
+	"Icon": "imgs/plugin/category-icon",
+	"URL": "https://github.com/viktorodman/streamdeck-scrcpy",
+	"Category": "scrcpy",
+	"CategoryIcon": "imgs/plugin/category-icon",
+	"CodePath": "bin/plugin.js",
+	"OS": [
+		{
+			"Platform": "mac",
+			"MinimumVersion": "12"
+		}
+	],
+	"Software": {
+		"MinimumVersion": "6.5"
+	},
+	"SDKVersion": 2,
+	"Nodejs": {
+		"Version": "20",
+		"Debug": "enabled"
+	},
+	"UUID": "com.viktorodman.scrcpy",
+	"Actions": [
+		{
+			"Name": "Mirror Device",
+			"UUID": "com.viktorodman.scrcpy.mirror-device",
+			"Icon": "imgs/actions/mirror-device/icon",
+			"Tooltip": "Toggle scrcpy mirroring for an Android device",
+			"PropertyInspectorPath": "ui/mirror-device.html",
+			"States": [
+				{
+					"Image": "imgs/actions/mirror-device/key-off",
+					"TitleAlignment": "middle"
+				},
+				{
+					"Image": "imgs/actions/mirror-device/key-on",
+					"TitleAlignment": "middle"
+				}
+			]
+		}
+	]
+}

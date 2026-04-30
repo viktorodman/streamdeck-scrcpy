@@ -1,0 +1,26 @@
+{
+	"name": "com.viktorodman.scrcpy",
+	"version": "0.1.0",
+	"description": "Mirror Android devices via scrcpy with state-aware buttons",
+	"author": "Viktor Ödman",
+	"license": "MIT",
+	"type": "module",
+	"main": "com.viktorodman.scrcpy.sdPlugin/bin/plugin.js",
+	"scripts": {
+		"build": "rollup -c",
+		"watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.viktorodman.scrcpy\""
+	},
+	"dependencies": {
+		"@elgato/streamdeck": "^2.0.0"
+	},
+	"devDependencies": {
+		"@rollup/plugin-commonjs": "^28.0.1",
+		"@rollup/plugin-node-resolve": "^15.3.0",
+		"@rollup/plugin-typescript": "^12.1.1",
+		"@tsconfig/node20": "^20.1.4",
+		"@types/node": "^22.5.4",
+		"rollup": "^4.24.0",
+		"tslib": "^2.7.0",
+		"typescript": "^5.6.2"
+	}
+}

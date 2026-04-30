@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Mirror Device</title>
+	<script src="https://sdpi-components.dev/releases/v3/sdpi-components.js"></script>
+</head>
+<body>
+	<sdpi-item label="Device serial">
+		<sdpi-textfield setting="deviceSerial" placeholder="e.g. RFCY80VZDWW"></sdpi-textfield>
+	</sdpi-item>
+	<sdpi-item>
+		<sdpi-textarea readonly>Find your serial with `adb devices`. The plugin polls every few seconds and updates the icon to reflect the actual scrcpy state.</sdpi-textarea>
+	</sdpi-item>
+</body>
+</html>
