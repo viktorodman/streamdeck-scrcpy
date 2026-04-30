@@ -12,8 +12,8 @@ import { promisify } from "node:util";
 
 const execAsync = promisify(exec);
 
-const SCRCPY_PATH = "/opt/homebrew/bin/scrcpy";
-const PATH_PREPEND = "/opt/homebrew/bin";
+// Common Homebrew bin dirs on Apple Silicon and Intel Macs
+const HOMEBREW_BIN_DIRS = ["/opt/homebrew/bin", "/usr/local/bin"];
 const POLL_INTERVAL_MS = 3000;
 
 type MirrorSettings = {
@@ -97,11 +97,13 @@ export class MirrorDevice extends SingletonAction<MirrorSettings> {
 	}
 
 	private start(serial: string): void {
-		const child = spawn(SCRCPY_PATH, ["-s", serial], {
+		const augmentedPath = [...HOMEBREW_BIN_DIRS, process.env.PATH ?? ""].filter(Boolean).join(":");
+		const child = spawn("scrcpy", ["-s", serial], {
 			detached: true,
 			stdio: "ignore",
-			env: { ...process.env, PATH: `${PATH_PREPEND}:${process.env.PATH ?? ""}` }
+			env: { ...process.env, PATH: augmentedPath }
 		});
+		child.on("error", (err) => streamDeck.logger.error(`scrcpy spawn error: ${err.message}`));
 		child.unref();
 	}
 }
